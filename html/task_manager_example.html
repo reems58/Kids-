@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المهام التعليمية - مثال</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .task-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .task-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task-info {
+            flex: 1;
+        }
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-up { background: #10b981; color: white; }
+        .btn-down { background: #6366f1; color: white; }
+        .btn-delete { background: #ef4444; color: white; }
+        .btn:hover { transform: translateY(-2px); }
+        .add-task-form {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="task-container">
+        <h1>إدارة المهام التعليمية</h1>
+        
+        <!-- نموذج إضافة مهمة -->
+        <div class="add-task-form">
+            <h2>إضافة مهمة جديدة</h2>
+            <form id="addTaskForm">
+                <div class="form-group">
+                    <label>معرف الطفل:</label>
+                    <input type="number" id="childId" required>
+                </div>
+                <div class="form-group">
+                    <label>المحتوى:</label>
+                    <select id="contentSelect" required>
+                        <option value="">اختر المحتوى...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>اسم المهمة (عربي):</label>
+                    <input type="text" id="taskNameAr" placeholder="مثال: تعلم الأرقام">
+                </div>
+                <div class="form-group">
+                    <label>المدة (بالدقائق):</label>
+                    <input type="number" id="duration" value="10" min="1">
+                </div>
+                <div class="form-group">
+                    <label>الترتيب (اختياري - اتركه فارغاً للإضافة في النهاية):</label>
+                    <input type="number" id="orderIndex" min="0">
+                </div>
+                <button type="submit" class="btn" style="background: #6366f1; color: white;">إضافة المهمة</button>
+            </form>
+        </div>
+
+        <!-- قائمة المهام -->
+        <div id="tasksList">
+            <div class="loading">جاري تحميل المهام...</div>
+        </div>
+    </div>
+
+    <script src="../js/task_manager.js"></script>
+    <script>
+        let currentChildId = null;
+
+        // تحميل المحتوى المتاح
+        async function loadContent() {
+            try {
+                const content = await TaskManager.getAllContent();
+                const select = document.getElementById('contentSelect');
+                select.innerHTML = '<option value="">اختر المحتوى...</option>';
+                content.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.content_id;
+                    option.textContent = item.content_name_ar;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                TaskManager.showError('فشل تحميل المحتوى: ' + error.message);
+            }
+        }
+
+        // تحميل المهام
+        async function loadTasks(childId) {
+            const tasksList = document.getElementById('tasksList');
+            tasksList.innerHTML = '<div class="loading">جاري تحميل المهام...</div>';
+            
+            try {
+                const tasks = await TaskManager.getChildTasks(childId);
+                
+                if (tasks.length === 0) {
+                    tasksList.innerHTML = '<p>لا توجد مهام حالياً</p>';
+                    return;
+                }
+                
+                tasksList.innerHTML = '';
+                tasks.forEach((task, index) => {
+                    const taskCard = document.createElement('div');
+                    taskCard.className = 'task-card';
+                    taskCard.innerHTML = `
+                        <div class="task-info">
+                            <h3>${task.task_name_ar || task.task_name}</h3>
+                            <p><strong>المحتوى:</strong> ${task.content_name_ar}</p>
+                            <p><strong>المدة:</strong> ${task.duration_minutes} دقيقة</p>
+                            <p><strong>الترتيب:</strong> ${task.order_index}</p>
+                            <p><strong>الحالة:</strong> ${task.status}</p>
+                            ${task.description ? `<p>${task.description}</p>` : ''}
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn btn-up" onclick="moveTaskUp(${task.task_id})" ${index === 0 ? 'disabled' : ''}>
+                                ⬆️ أعلى
+                            </button>
+                            <button class="btn btn-down" onclick="moveTaskDown(${task.task_id})" ${index === tasks.length - 1 ? 'disabled' : ''}>
+                                ⬇️ أسفل
+                            </button>
+                            <button class="btn btn-delete" onclick="deleteTask(${task.task_id})">
+                                🗑️ حذف
+                            </button>
+                        </div>
+                    `;
+                    tasksList.appendChild(taskCard);
+                });
+            } catch (error) {
+                tasksList.innerHTML = `<p style="color: red;">خطأ: ${error.message}</p>`;
+                TaskManager.showError('فشل تحميل المهام: ' + error.message);
+            }
+        }
+
+        // إضافة مهمة
+        document.getElementById('addTaskForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const childId = parseInt(document.getElementById('childId').value);
+            const contentId = parseInt(document.getElementById('contentSelect').value);
+            const taskNameAr = document.getElementById('taskNameAr').value;
+            const duration = parseInt(document.getElementById('duration').value) || 10;
+            const orderIndex = document.getElementById('orderIndex').value ? 
+                parseInt(document.getElementById('orderIndex').value) : null;
+            
+            if (!childId || !contentId) {
+                TaskManager.showError('يرجى إدخال معرف الطفل واختيار المحتوى');
+                return;
+            }
+            
+            try {
+                const taskData = {
+                    child_id: childId,
+                    content_id: contentId,
+                    task_name_ar: taskNameAr,
+                    duration_minutes: duration
+                };
+                
+                if (orderIndex !== null) {
+                    taskData.order_index = orderIndex;
+                }
+                
+                await TaskManager.addTask(taskData);
+                TaskManager.showSuccess('تمت إضافة المهمة بنجاح');
+                
+                // إعادة تحميل المهام
+                if (currentChildId) {
+                    await loadTasks(currentChildId);
+                }
+                
+                // مسح النموذج
+                document.getElementById('addTaskForm').reset();
+            } catch (error) {
+                TaskManager.showError('فشل إضافة المهمة: ' + error.message);
+            }
+        });
+
+        // نقل مهمة للأعلى
+        async function moveTaskUp(taskId) {
+            try {
+                await TaskManager.moveTaskUp(taskId);
+                TaskManager.showSuccess('تم نقل المهمة للأعلى');
+                if (currentChildId) {
+                    await loadTasks(currentChildId);
+                }
+            } catch (error) {
+                TaskManager.showError('فشل نقل المهمة: ' + error.message);
+            }
+        }
+
+        // نقل مهمة للأسفل
+        async function moveTaskDown(taskId) {
+            try {
+                await TaskManager.moveTaskDown(taskId);
+                TaskManager.showSuccess('تم نقل المهمة للأسفل');
+                if (currentChildId) {
+                    await loadTasks(currentChildId);
+                }
+            } catch (error) {
+                TaskManager.showError('فشل نقل المهمة: ' + error.message);
+            }
+        }
+
+        // حذف مهمة
+        async function deleteTask(taskId) {
+            if (!confirm('هل أنت متأكد من حذف هذه المهمة؟')) {
+                return;
+            }
+            
+            try {
+                await TaskManager.deleteTask(taskId);
+                TaskManager.showSuccess('تم حذف المهمة بنجاح');
+                if (currentChildId) {
+                    await loadTasks(currentChildId);
+                }
+            } catch (error) {
+                TaskManager.showError('فشل حذف المهمة: ' + error.message);
+            }
+        }
+
+        // عند تغيير معرف الطفل، تحميل المهام
+        document.getElementById('childId').addEventListener('change', (e) => {
+            const childId = parseInt(e.target.value);
+            if (childId) {
+                currentChildId = childId;
+                loadTasks(childId);
+            }
+        });
+
+        // تحميل المحتوى عند تحميل الصفحة
+        loadContent();
+    </script>
+</body>
+</html>
+

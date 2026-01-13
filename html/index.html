@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التعلم للأطفال - تسجيل الدخول</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- قسم المميزات -->
+        <div class="features-section">
+            <div class="logo">
+                <h1>🎓 منصة التعلم للأطفال</h1>
+            </div>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-icon">🎮</div>
+                    <h3>ألعاب تعليمية</h3>
+                    <p>مجموعة متنوعة من الألعاب التفاعلية التي تجعل التعلم ممتعًا</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📚</div>
+                    <h3>محتوى متنوع</h3>
+                    <p>آلاف الدروس والأنشطة في مختلف المواضيع التعليمية</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🏆</div>
+                    <h3>نظام المكافآت</h3>
+                    <p>احصل على نقاط وجوائز عند إكمال الأنشطة والدروس</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">👨‍👩‍👧‍👦</div>
+                    <h3>متابعة الوالدين</h3>
+                    <p>تابع تقدم أطفالك من خلال تقارير مفصلة</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <h3>تقارير التقدم</h3>
+                    <p>إحصائيات شاملة عن أداء الطفل في جميع المواد</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔒</div>
+                    <h3>أمان عالي</h3>
+                    <p>بيئة آمنة ومحمية للأطفال مع رقابة الوالدين</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم النماذج -->
+        <div class="auth-section">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <div class="auth-tabs">
+                        <button class="tab-btn active" id="loginTab">
+                            تسجيل الدخول
+                        </button>
+                        <button class="tab-btn" id="signupTab">
+                            إنشاء حساب جديد
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Login Form -->
+                <form class="auth-form active" id="loginForm">
+                        <div class="form-header">
+                            <h2 class="welcome-title">مرحبًا بعودتك!</h2>
+                            <h3 class="platform-title">🎓 منصة تعليم الأطفال</h3>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginEmail">البريد الإلكتروني</label>
+                            <input 
+                                type="email" 
+                                id="loginEmail" 
+                                name="email" 
+                                placeholder="أدخل بريدك الإلكتروني"
+                                required
+                                autocomplete="email"
+                            >
+                            <span class="error-message" id="loginEmailError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">كلمة المرور</label>
+                            <div class="password-input">
+                                <input 
+                                    type="password" 
+                                    id="loginPassword" 
+                                    name="password" 
+                                    placeholder="أدخل كلمة المرور"
+                                    required
+                                    autocomplete="current-password"
+                                >
+                                <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">
+                                    👁️
+                                </button>
+                            </div>
+                            <span class="error-message" id="loginPasswordError"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="remember-me">
+                                <input type="checkbox" id="rememberMe">
+                                <span>تذكرني</span>
+                            </label>
+                            <a href="#" class="forgot-password">نسيت كلمة المرور؟</a>
+                        </div>
+                        <button type="submit" class="submit-btn">تسجيل الدخول</button>
+                        <div class="form-message" id="loginMessage"></div>
+                    </form>
+
+                <!-- نموذج إنشاء حساب -->
+                <form class="auth-form" id="signupForm">
+                    <div class="form-header">
+                        <h2 class="welcome-title">أنشئ حسابك الآن!</h2>
+                        <h3 class="platform-title">🎓 منصة تعليم الأطفال</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupFirstName">الاسم الأول</label>
+                        <input 
+                            type="text" 
+                            id="signupFirstName" 
+                            name="first_name" 
+                            placeholder="أدخل الاسم الأول"
+                            required
+                            autocomplete="given-name"
+                        >
+                        <span class="error-message" id="signupFirstNameError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupLastName">الاسم الأخير</label>
+                        <input 
+                            type="text" 
+                            id="signupLastName" 
+                            name="last_name" 
+                            placeholder="أدخل الاسم الأخير"
+                            required
+                            autocomplete="family-name"
+                        >
+                        <span class="error-message" id="signupLastNameError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">البريد الإلكتروني</label>
+                        <input 
+                            type="email" 
+                            id="signupEmail" 
+                            name="email" 
+                            placeholder="أدخل بريدك الإلكتروني"
+                            required
+                            autocomplete="email"
+                        >
+                        <span class="error-message" id="signupEmailError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPhone">رقم الهاتف</label>
+                        <input 
+                            type="tel" 
+                            id="signupPhone" 
+                            name="phone" 
+                            placeholder="07xxxxxxxx"
+                            required
+                            autocomplete="tel"
+                        >
+                        <span class="error-message" id="signupPhoneError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupGender">الجنس</label>
+                        <select id="signupGender" name="gender" required>
+                            <option value="أب" selected>أب</option>
+                            <option value="أم">أم</option>
+                        </select>
+                        <span class="error-message" id="signupGenderError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">كلمة المرور</label>
+                        <div class="password-input">
+                            <input 
+                                type="password" 
+                                id="signupPassword" 
+                                name="password" 
+                                placeholder="أدخل كلمة المرور (8 أحرف على الأقل)"
+                                required
+                                autocomplete="new-password"
+                            >
+                            <button type="button" class="toggle-password" onclick="togglePassword('signupPassword')">
+                                👁️
+                            </button>
+                        </div>
+                        <span class="error-message" id="signupPasswordError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupConfirmPassword">تأكيد كلمة المرور</label>
+                        <div class="password-input">
+                            <input 
+                                type="password" 
+                                id="signupConfirmPassword" 
+                                name="confirmPassword" 
+                                placeholder="أعد إدخال كلمة المرور"
+                                required
+                                autocomplete="new-password"
+                            >
+                            <button type="button" class="toggle-password" onclick="togglePassword('signupConfirmPassword')">
+                                👁️
+                            </button>
+                        </div>
+                        <span class="error-message" id="signupConfirmPasswordError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="terms-checkbox">
+                            <input type="checkbox" id="agreeTerms" required>
+                            <span>أوافق على <a href="#">الشروط والأحكام</a> و <a href="#">سياسة الخصوصية</a></span>
+                        </label>
+                        <span class="error-message" id="termsError"></span>
+                    </div>
+                    <button type="submit" class="submit-btn">إنشاء حساب</button>
+                    <div class="form-message" id="signupMessage"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+</body>
+</html>

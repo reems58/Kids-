@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التعلم - الطفل</title>
+    <link rel="stylesheet" href="../css/child_view.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="child-container">
+        <!-- Child Header -->
+        <header class="child-header">
+            <div class="child-info">
+                <div class="child-avatar-large" id="childAvatar">
+                    👤
+                </div>
+                <div>
+                    <h1 id="childName">الطفل</h1>
+                    <div class="child-title-stars">
+                        <span id="childTitle" class="child-title">مبتدئ 🎈</span>
+                        <span class="stars-display">
+                            ⭐ <span id="totalStars">0</span> نجمة
+                        </span>
+                    </div>
+                    <p id="childStats">الوقت الإجمالي: 0 دقيقة</p>
+                </div>
+            </div>
+            <button class="btn-exit" onclick="exitSession()">خروج</button>
+        </header>
+
+        <!-- Current Task Section -->
+        <section class="current-task-section" id="currentTaskSection">
+            <div class="task-card">
+                <div class="task-header">
+                    <div class="task-icon" id="taskIcon">📚</div>
+                    <div>
+                        <h2 id="taskName">لا توجد مهمة حالياً</h2>
+                        <p id="taskSubject">اختر مهمة للبدء</p>
+                    </div>
+                </div>
+                
+                <div class="task-timer" id="taskTimer" style="display: none;">
+                    <div class="timer-circle">
+                        <svg class="timer-svg">
+                            <circle class="timer-bg" cx="100" cy="100" r="90"></circle>
+                            <circle class="timer-progress" id="timerProgress" cx="100" cy="100" r="90"></circle>
+                        </svg>
+                        <div class="timer-text">
+                            <span id="timerMinutes">00</span>:<span id="timerSeconds">00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-description" id="taskDescription">
+                    <p>ابدأ جلسة التعلم لرؤية المهمة الحالية</p>
+                </div>
+                
+                <!-- Parent Note -->
+                <div class="parent-note-container" id="parentNoteContainer" style="display: none;">
+                    <div class="parent-note-header">
+                        <span class="note-icon">📝</span>
+                        <span class="note-label">ملاحظات من الأهل:</span>
+                    </div>
+                    <div class="parent-note-text" id="parentNoteText"></div>
+                </div>
+
+                <div class="task-actions">
+                    <button class="btn-start-task" id="btnStartTask" onclick="startCurrentTask()" style="display: none;">
+                        ابدأ المهمة
+                    </button>
+                    <button class="btn-pause-task" id="btnPauseTask" onclick="pauseTask()" style="display: none;">
+                        إيقاف مؤقت
+                    </button>
+                    <button class="btn-complete-task" id="btnCompleteTask" onclick="completeTask()" style="display: none;">
+                        إكمال المهمة
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- All Tasks Section -->
+        <section class="all-tasks-section" id="allTasksSection">
+            <h2>📋 جميع المهام</h2>
+            <div class="tasks-list" id="tasksList">
+                <!-- Tasks will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Badges Section -->
+        <section class="badges-section">
+            <h2>شاراتي 🏆</h2>
+            <div class="badges-grid" id="badgesGrid">
+                <!-- Badges will be loaded here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal">
+            <div class="success-animation">🎉</div>
+            <h2 id="successTitle">ممتاز!</h2>
+            <p id="successMessage">أكملت المهمة بنجاح</p>
+            <button class="btn-primary" onclick="closeSuccessModal()">متابعة</button>
+        </div>
+    </div>
+
+    <!-- Fullscreen Video Modal -->
+    <div id="fullscreenVideoModal" class="fullscreen-video-modal" style="display: none;">
+        <div class="video-modal-content">
+            <button class="video-close-btn" onclick="closeFullscreenVideo()" title="إغلاق">
+                ✕
+            </button>
+            <div class="video-container">
+                <iframe id="videoPlayer" 
+                        src="" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/child_view.js"></script>
+</body>
+</html>
+

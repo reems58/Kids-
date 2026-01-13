@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحتوى التعليمي - منصة تعليم الأطفال</title>
+    <link rel="stylesheet" href="../css/content_view.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="content-header">
+        <div class="header-container">
+            <button class="btn-back" onclick="goBack()">
+                <span>←</span>
+                <span>رجوع</span>
+            </button>
+            <h1 class="page-title">
+                <span class="title-icon">🎮</span>
+                <span>المحتوى التعليمي</span>
+            </h1>
+            <div class="child-info">
+                <span id="childNameDisplay">-</span>
+                <span class="age-badge" id="ageDisplay">-</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content-main">
+        <!-- Warning Message -->
+        <div id="warningMessage" class="warning-message" style="display: none;">
+            <span class="warning-icon">⚠️</span>
+            <span id="warningText"></span>
+        </div>
+
+        <!-- Statistics -->
+        <div class="content-stats">
+            <div class="stat-card">
+                <div class="stat-icon">🎮</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="gamesCount">0</div>
+                    <div class="stat-label">لعبة</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📺</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="videosCount">0</div>
+                    <div class="stat-label">فيديو</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="totalCount">0</div>
+                    <div class="stat-label">إجمالي المحتوى</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Sections -->
+        <div class="content-sections" id="contentSections">
+            <!-- Content will be loaded here -->
+            <div class="loading-container">
+                <div class="loading-spinner">⏳</div>
+                <p>جاري تحميل المحتوى...</p>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">📭</div>
+            <h2>لا يوجد محتوى متاح</h2>
+            <p>لا يوجد محتوى تعليمي مناسب لعمر هذا الطفل حالياً</p>
+        </div>
+
+        <!-- Badges Section -->
+        <section class="badges-section" id="badgesSection">
+            <h2 class="badges-section-title">🏆 شاراتي</h2>
+            <div class="badges-grid" id="badgesGrid">
+                <div class="loading-container">
+                    <div class="loading-spinner">⏳</div>
+                    <p>جاري تحميل الشارات...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Fullscreen Video Modal -->
+    <div id="fullscreenVideoModal" class="fullscreen-video-modal" style="display: none;">
+        <div class="video-modal-content">
+            <button class="video-close-btn" onclick="closeFullscreenVideo()" title="إغلاق">
+                ✕
+            </button>
+            <div class="video-container">
+                <iframe id="videoPlayer" 
+                        src="" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/content_view.js"></script>
+</body>
+</html>
+

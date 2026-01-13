@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الأهل - منصة تعليم الأطفال</title>
+    <link rel="stylesheet" href="../css/parent_dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="header-right">
+                <h1 class="platform-title">🌞 منصة تعليم الأطفال</h1>
+            </div>
+            <div class="header-left">
+                <span class="welcome-text" id="welcomeText">مرحباً</span>
+                <button class="btn-settings" onclick="openSettings()">⚙️ الإعدادات</button>
+                <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <button class="nav-tab" id="reportsTab" onclick="switchTab('reports')">
+            <span class="tab-icon">📊</span>
+            <span class="tab-text">التقارير</span>
+        </button>
+        <button class="nav-tab" id="childrenTab" onclick="switchTab('children')">
+            <span class="tab-icon">👶</span>
+            <span class="tab-text">التحكم بالأطفال</span>
+        </button>
+        <button class="nav-tab" id="personalTab" onclick="switchTab('personal')">
+            <span class="tab-icon">👤</span>
+            <span class="tab-text">المعلومات الشخصية</span>
+        </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Personal Information Tab -->
+        <section class="content-section" id="personalSection" style="display: none;">
+            <div class="section-card">
+                <h2 class="section-title">📄 معلوماتك الشخصية</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>الاسم:</label>
+                        <span id="parentName">-</span>
+                    </div>
+                    <div class="info-item">
+                        <label>النوع:</label>
+                        <span id="parentGender">-</span>
+                    </div>
+                    <div class="info-item">
+                        <label>البريد الإلكتروني:</label>
+                        <span id="parentEmail">-</span>
+                    </div>
+                    <div class="info-item">
+                        <label>عدد الأطفال:</label>
+                        <span id="childrenCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Children Management Tab -->
+        <section class="content-section" id="childrenSection">
+            <div class="section-header">
+                <h2 class="section-title">👶 أطفالك</h2>
+                <button class="btn-add-child" onclick="openAddChildModal()">
+                    <span class="btn-icon">➕</span>
+                    <span class="btn-text">إضافة طفل جديد</span>
+                </button>
+            </div>
+            <div id="childrenContainer" class="children-grid">
+                <div class="loading-message">
+                    <div class="loading-spinner">⏳</div>
+                    <p>جاري تحميل البيانات...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reports Tab -->
+        <section class="content-section" id="reportsSection" style="display: none;">
+            <div id="reportsContainer" class="reports-container">
+                <!-- Reports will be loaded here per child -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Child Modal -->
+    <div id="addChildModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="modal-icon">➕</span>
+                    إضافة طفل جديد
+                </h3>
+                <span class="close-modal" onclick="closeAddChildModal()">&times;</span>
+            </div>
+            <form id="addChildForm" class="modal-form">
+                <div class="form-group">
+                    <label for="childName">اسم الطفل</label>
+                    <input type="text" id="childName" name="childName" placeholder="أدخل اسم الطفل" required>
+                </div>
+                <div class="form-group">
+                    <label for="childGender">الجنس</label>
+                    <select id="childGender" name="childGender" required>
+                        <option value="ذكر" selected>ذكر</option>
+                        <option value="أنثى">أنثى</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="childBirthDate">تاريخ الميلاد</label>
+                    <input type="date" id="childBirthDate" name="birthDate" required>
+                </div>
+                <button type="submit" class="btn-save">
+                    <span class="btn-icon">💾</span>
+                    <span class="btn-text">حفظ</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Child Modal -->
+    <div id="editChildModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="modal-icon">✏️</span>
+                    تعديل بيانات الطفل
+                </h3>
+                <span class="close-modal" onclick="closeEditChildModal()">&times;</span>
+            </div>
+            <form id="editChildForm" class="modal-form">
+                <input type="hidden" id="editChildId" name="child_id">
+                <div class="form-group">
+                    <label for="editChildName">اسم الطفل</label>
+                    <input type="text" id="editChildName" name="childName" placeholder="أدخل اسم الطفل" required>
+                </div>
+                <div class="form-group">
+                    <label for="editChildGender">الجنس</label>
+                    <select id="editChildGender" name="childGender" required>
+                        <option value="ذكر">ذكر</option>
+                        <option value="أنثى">أنثى</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editChildBirthDate">تاريخ الميلاد</label>
+                    <input type="date" id="editChildBirthDate" name="birthDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="editChildAge">العمر (سنوات)</label>
+                    <input type="number" id="editChildAge" name="age" min="1" max="18" placeholder="العمر">
+                    <small style="color: #666; font-size: 12px;">سيتم حساب العمر تلقائياً من تاريخ الميلاد إذا تركته فارغاً</small>
+                </div>
+                <button type="submit" class="btn-save">
+                    <span class="btn-icon">💾</span>
+                    <span class="btn-text">حفظ التعديلات</span>
+                </button>
+                <button type="button" class="btn-cancel" onclick="closeEditChildModal()" style="margin-top: 10px;">
+                    <span class="btn-text">إلغاء</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Manage Tasks Modal -->
+    <div id="manageTasksModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header-tasks">
+                <h3 class="modal-title-tasks">
+                    <span class="modal-icon-small">📄</span>
+                    <span id="manageTasksTitle">إدارة المهام</span>
+                </h3>
+                <span class="close-modal" onclick="closeManageTasksModal()">&times;</span>
+            </div>
+            <div class="modal-body-tasks">
+                <!-- Current Tasks Section -->
+                <div class="current-tasks-section">
+                    <h4 class="tasks-subtitle">المهام الحالية:</h4>
+                    <div id="currentTasksList" class="current-tasks-list">
+                        <!-- Tasks will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Add New Task Section -->
+                <div class="add-new-task-section">
+                    <h4 class="tasks-subtitle">إضافة مهمة جديدة:</h4>
+                    <form id="addTaskFormModal" class="add-task-form-modal">
+                        <input type="hidden" id="taskChildIdModal" name="child_id">
+                        <div class="form-group-modal">
+                            <label for="taskContentModal">اختر المحتوى:</label>
+                            <select id="taskContentModal" name="content_id" required class="select-modal">
+                                <option value="">اختر المحتوى...</option>
+                            </select>
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="taskDurationModal">⏱️ الوقت المخصص (دقائق):</label>
+                            <input type="number" id="taskDurationModal" name="duration_minutes" value="10" min="1" max="120" required class="input-modal">
+                            <small style="color: #666; font-size: 0.85em; display: block; margin-top: 5px;">حدد المدة الزمنية للمهمة (1-120 دقيقة)</small>
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="taskNoteModal">ملاحظات (اختياري):</label>
+                            <textarea id="taskNoteModal" name="parent_note" rows="3" placeholder="ملاحظات للطفل....." class="textarea-modal"></textarea>
+                        </div>
+                        <button type="submit" class="btn-add-task-modal">إضافة المهمة</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div id="addTaskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="modal-icon">➕</span>
+                    إضافة مهمة جديدة
+                </h3>
+                <span class="close-modal" onclick="closeAddTaskModal()">&times;</span>
+            </div>
+            <form id="addTaskForm" class="modal-form">
+                <input type="hidden" id="taskChildId" name="child_id">
+                <div class="form-group">
+                    <label for="taskContent">المحتوى التعليمي</label>
+                    <select id="taskContent" name="content_id" required>
+                        <option value="">اختر المحتوى...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskNameAr">اسم المهمة (عربي)</label>
+                    <input type="text" id="taskNameAr" name="task_name_ar" placeholder="مثال: تعلم الأرقام">
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription">الوصف (اختياري)</label>
+                    <textarea id="taskDescription" name="description" rows="3" placeholder="وصف المهمة..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="taskDuration">⏱️ المدة (بالدقائق)</label>
+                    <input type="number" id="taskDuration" name="duration_minutes" value="10" min="1" max="120" required>
+                    <small style="color: #666; font-size: 0.85em;">حدد المدة الزمنية للمهمة (1-120 دقيقة)</small>
+                </div>
+                <div class="form-group">
+                    <label for="taskOrder">الترتيب (اختياري - اتركه فارغاً للإضافة في النهاية)</label>
+                    <input type="number" id="taskOrder" name="order_index" min="0" placeholder="الترتيب">
+                </div>
+                <div class="form-group">
+                    <label for="taskNote">ملاحظات الأهل (اختياري)</label>
+                    <textarea id="taskNote" name="parent_note" rows="2" placeholder="ملاحظات..."></textarea>
+                </div>
+                <button type="submit" class="btn-save">
+                    <span class="btn-icon">💾</span>
+                    <span class="btn-text">إضافة المهمة</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="modal-icon">⚙️</span>
+                    إعدادات الحساب
+                </h3>
+                <span class="close-modal" onclick="closeSettingsModal()">&times;</span>
+            </div>
+            <div class="settings-content">
+                <div class="setting-section">
+                    <label class="setting-label">
+                        <span class="setting-icon">✏️</span>
+                        تعديل الاسم
+                    </label>
+                    <div class="setting-input-group">
+                        <input type="text" id="editName" class="setting-input" value="">
+                        <button class="btn-save-setting" onclick="saveName()">حفظ الاسم</button>
+                    </div>
+                </div>
+                <div class="setting-section">
+                    <label class="setting-label">
+                        <span class="setting-icon">📧</span>
+                        تعديل البريد الإلكتروني
+                    </label>
+                    <div class="setting-input-group">
+                        <input type="email" id="editEmail" class="setting-input" value="">
+                        <button class="btn-save-setting" onclick="saveEmail()">حفظ البريد</button>
+                    </div>
+                </div>
+                <div class="setting-section">
+                    <label class="setting-label">
+                        <span class="setting-icon">🔒</span>
+                        تغيير كلمة المرور
+                    </label>
+                    <div class="setting-input-group">
+                        <input type="password" id="currentPassword" class="setting-input" placeholder="كلمة المرور الحالية">
+                        <input type="password" id="newPassword" class="setting-input" placeholder="كلمة المرور الجديدة">
+                        <button class="btn-save-setting" onclick="savePassword()">حفظ كلمة المرور</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div id="achievementsModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <span class="modal-icon">🏆</span>
+                    الإنجازات
+                </h3>
+                <span class="close-modal" onclick="closeAchievementsModal()">&times;</span>
+            </div>
+            <div class="achievements-content" id="achievementsContent">
+                <div class="loading-message" style="text-align: center; padding: 40px;">
+                    <div class="loading-spinner">⏳</div>
+                    <p>جاري تحميل الإنجازات...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/task_manager.js"></script>
+    <script src="../js/parent_dashboard.js"></script>
+</body>
+</html>
